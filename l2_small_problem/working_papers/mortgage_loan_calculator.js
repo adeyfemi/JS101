@@ -1,13 +1,9 @@
 // Morgage Loan Calculator
 
 const NUM_MTHS_IN_YR = 12;
-const HUNDRED_PCT = 100;
+const PCT = 100;
 
 const readline = require("readline-sync");
-
-const valueFormat = new Intl.NumberFormat('en-US',
-                        { style: 'currency', currency: 'USD',
-                          minimumFractionDigits: 2 });
 
 const MESSAGES = require('./mrt_loan_calc_messages.json');
 
@@ -16,6 +12,7 @@ function prompt(msg) {
 }
 
 function getName() {
+  prompt(MESSAGES['enterName']);
   let name = readline.question();
   while (name.trimStart() === '') {
     prompt(MESSAGES['validName']);
@@ -24,91 +21,100 @@ function getName() {
   return name;
 }
 
-function verifyAnswer(answer) {
-  while (answer !== 'yes') {
+function verifyInfoRequest() {
+  prompt(MESSAGES['infoRequest']);
+  let ans = readline.question();
+  while (ans !== 'yes') {
     prompt(MESSAGES['verifyAnswer']);
-    answer = readline.question();
+    ans = readline.question();
   }
+  return ans;
 }
 
-function invalidNumber(loanAmount) {
-  return loanAmount.trimStart() === '' || Number.isNaN(Number(loanAmount));
+function invalidLoanAmount(loanAmt) {
+  return loanAmt.trimStart() === '' || Number.isNaN(Number(loanAmt));
 }
 
-function getValidNumber(loanAmount) {
-  while (invalidNumber(loanAmount)) {
+function getValidLoanAmount() {
+  prompt(MESSAGES['loanAmount']);
+  let loanAmt = readline.question();
+  while (invalidLoanAmount(loanAmt)) {
     prompt(MESSAGES['validNumber']);
-    loanAmount = readline.question();
+    loanAmt = readline.question();
   }
+  return loanAmt;
+}
+
+function invalidDuration(loanDur) {
+  return loanDur.trimStart() === '' || Number.isNaN(Number(loanDur));
+}
+
+function getValidDuration() {
+  prompt(MESSAGES['loanDuration']);
+  let loanDur = readline.question();
+  while (invalidDuration(loanDur)) {
+    prompt(MESSAGES['validNumber']);
+    loanDur = readline.question();
+  }
+  return loanDur;
 }
 
 function invalidRate(intRate) {
   return intRate.trimStart() === '' || Number.isNaN(Number(intRate));
 }
 
-function getValidRate(intRate) {
+function getValidRate() {
+  prompt(MESSAGES['interestRate']);
+  let intRate = readline.question();
   while (invalidRate(intRate)) {
     prompt(MESSAGES['validRate']);
     intRate = readline.question();
   }
+  return intRate;
 }
 
-
-function invalidResponse(response) {
-  return response === '1' || response === '2' || response === '3';
-}
-
-function verifyResponse(response) {
-  while (!invalidResponse(response)) {
-    prompt(MESSAGES['verifyResponse']);
-    response = readline.question();
+function calcMonthlyPmt(loanAmount, loanDuration, annualInterestRate) {
+  let monthlyIntRate = Number(annualInterestRate) / NUM_MTHS_IN_YR / PCT;
+  let loanTenor = Number(loanDuration) * NUM_MTHS_IN_YR;
+  if (monthlyIntRate === 0) {
+    return Number(loanAmount) / loanTenor;
+  } else {
+    return Number(loanAmount) *
+    (monthlyIntRate /
+    (1 - Math.pow((1 + monthlyIntRate), (-loanTenor))));
   }
 }
+
+function tryAgain() {
+  prompt(MESSAGES['tryAgain']);
+  let ans = readline.question();
+  while (!['y',"yes","no","n"].includes(ans)) {
+    prompt("Please enter yes or no");
+    ans = readline.question();
+  }
+  return ans;
+}
+
+prompt(MESSAGES['welcome']);
+
+let yourName = getName();
+prompt(`Hi ${yourName}!, you are now ready to get started!`);
 
 while (true) {
-  prompt(MESSAGES['welcome']);
+  let answer = verifyInfoRequest();
+  prompt(`You answered ${answer}. Let's continue.`);
 
-  prompt(MESSAGES['enterName']);
-  let yourName = getName();
-  prompt(`Hi ${yourName}!, you are now ready to get started!`);
+  let loanAmount = getValidLoanAmount();
+  let annualInterestRate = getValidRate();
+  let loanDuration = getValidDuration();
 
-  prompt(MESSAGES['infoRequest']);
-  let answer = readline.question();
-  verifyAnswer(answer);
+  prompt("Calculating Monthly Payment...");
 
-  prompt(MESSAGES['loanAmount']);
-  let loanAmount = readline.question();
-  getValidNumber(loanAmount);
+  let monthlyPmt = calcMonthlyPmt(loanAmount, loanDuration, annualInterestRate);
+  prompt(`The Monthly Payment is: $${monthlyPmt.toFixed(2)}`);
 
-  prompt(MESSAGES['interestRate']);
-  let annualInterestRate = readline.question();
-  getValidRate(annualInterestRate);
-
-  prompt(MESSAGES['loanDuration']);
-  let loanDuration = readline.question();
-  getValidNumber(loanDuration);
-
-  prompt(MESSAGES['operation']);
-  let response = readline.question();
-  verifyResponse(response);
-
-  let monthlyInt = Number(annualInterestRate) / HUNDRED_PCT / NUM_MTHS_IN_YR;
-  let monthlyLoanDuration = Number(loanDuration) * NUM_MTHS_IN_YR;
-  let monthlyPayment = Number(loanAmount) * (monthlyInt / (1 - Math.pow
-    ((1 + monthlyInt), (-monthlyLoanDuration))));
-
-  switch (response) {
-    case '1': prompt(`The Monthly Payment is: ${valueFormat.format(monthlyPayment)}`);
-      break;
-    case '2': prompt(`The Loan Duration is: ${monthlyLoanDuration} months.`);
-      break;
-    case '3': prompt(`The Monthly Interest Rate is: ${monthlyInt}%`);
-      break;
-  }
-
-  prompt(MESSAGES['tryAgain']);
-  let tryAgain = readline.question();
-  if (tryAgain !== 'yes') break;
+  let restart = tryAgain();
+  if (restart === 'no' || restart === 'n') break;
 }
 
 prompt(MESSAGES['goodbye']);
