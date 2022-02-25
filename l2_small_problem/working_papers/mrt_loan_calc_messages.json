@@ -2,6 +2,7 @@
   "validName": "Please enter a valid name",
   "verifyAnswer": "You will need all your information to continue.\nDo you now have all your information? (yes/no)",
   "validNumber": "Please enter a valid number.",
+  "validRate": "Please enter a number greater than 0",
   "verifyResponse": "Please enter the number 1, 2 or 3.",
   "endSession?": "Please enter yes or no.",
   "welcome": "Welcome to the Loan Calculator!",
