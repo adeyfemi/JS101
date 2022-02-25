@@ -42,6 +42,18 @@ function getValidNumber(loanAmount) {
   }
 }
 
+function invalidRate(intRate) {
+  return intRate.trimStart() === '' || Number.isNaN(Number(intRate));
+}
+
+function getValidRate(intRate) {
+  while (invalidRate(intRate)) {
+    prompt(MESSAGES['validRate']);
+    intRate = readline.question();
+  }
+}
+
+
 function invalidResponse(response) {
   return response === '1' || response === '2' || response === '3';
 }
@@ -70,7 +82,7 @@ while (true) {
 
   prompt(MESSAGES['interestRate']);
   let annualInterestRate = readline.question();
-  getValidNumber(annualInterestRate);
+  getValidRate(annualInterestRate);
 
   prompt(MESSAGES['loanDuration']);
   let loanDuration = readline.question();
