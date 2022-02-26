@@ -7,7 +7,6 @@
   "endSession?": "Please enter yes or no.",
   "welcome": "Welcome to the Loan Calculator!",
   "enterName": "Please enter your first name:",
-  "infoRequest": "Do you have your:\n1) Loan Amount, 2) Annual Interest Rate (APR), and 3) Loan Duration?\n(yes/no).",
   "loanAmount": "Please enter your Loan Amount.",
   "interestRate": "Please enter your Annual Interest Rate.",
   "loanDuration": "Please enter how many years you want the loan for.",
