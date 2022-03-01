@@ -29,8 +29,7 @@ const WINNER_GAMES = 5;
 
 let TOTAL_GAMES_PLAYED = 0;
 
-const CHOICES = ['rock', 'paper', 'scissors', 'spock', 'lizard',
-  'r', 'p', 's', 'x', 'l'];
+const CHOICES = ['rock', 'r', 'paper', 'p', 'scissors', 's', 'spock', 'x', 'lizard', 'l'];
 
 const WINNING_MOVES = {rock: ['lizard', 'scissors'], paper: ['rock', 'spock'],
   scissors: ['lizard', 'paper'], spock: ['rock', 'scissors'], lizard: ['spock', 'paper']};
@@ -62,7 +61,7 @@ function playerChoice() {
     choice = readline.question();
   }
 
-  return choice;
+  return choice.toLowerCase();
 }
 
 function randomChoice() {
@@ -98,7 +97,7 @@ function findWinner(playerMove, computerMove) {
   }
 }
 
-function CurrentScore(playerMove, computerMove) {
+function getCurrentScore(playerMove, computerMove) {
   if (findWinner(playerMove, computerMove) === 'player wins') {
     playerWinTotal += 1;
     return playerWinTotal;
@@ -113,6 +112,18 @@ function incrementGamesPlayed() {
   return TOTAL_GAMES_PLAYED;
 }
 
+function continuePlaying() {
+  prompt("Do you want to continue playing?");
+  answer = readline.question();
+
+  while (!['yes', 'y', 'no', 'n'].includes(answer.toLowerCase())) {
+    prompt("Please enter yes or no.");
+    answer = readline.question();
+  }
+
+  return answer.toLowerCase();
+}
+
 function tryAgain() {
   prompt('Do you want to play again (y/n)?');
   let answer = readline.question().toLowerCase();
@@ -125,9 +136,9 @@ function tryAgain() {
   return answer;
 }
 
-
 prompt('Welcome to Rock, Paper, Scissors, Spock, Lizard ');
 prompt(`Hi ${getName()}!`);
+prompt(`The Game is up to ${WINNER_GAMES}.`)
 
 while (true) {
 
@@ -141,13 +152,18 @@ while (true) {
     let winningPlayer = findWinner(playerMove, computerMove);
     prompt(winningPlayer);
 
-    CurrentScore(playerMove, computerMove);
+    getCurrentScore(playerMove, computerMove);
 
     prompt(`The current score is - 
       Player: ${playerWinTotal} Computer: ${computerWinTotal}`);
 
     let gamesPlayed = incrementGamesPlayed();
     prompt(`The total number of games played is ${gamesPlayed}`);
+
+    prompt(`There are ${WINNER_GAMES - 
+      Math.max(playerWinTotal, computerWinTotal)} games left.`)
+
+    if (continuePlaying() === 'no') break;
 
     if (playerWinTotal === WINNER_GAMES ||
       computerWinTotal === WINNER_GAMES) break;
