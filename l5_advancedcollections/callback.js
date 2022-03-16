@@ -139,6 +139,7 @@ let myArr = [[18, 7], [3, 12]].forEach(arr => {
 
 // Ex. 7
 
+
 [[8, 13, 27], ['apple', 'banana', 'cantaloupe']].map(arr => {
   return arr.filter(item => {
     if (typeof item === 'number') {    // if it's a number
