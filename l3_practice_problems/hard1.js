@@ -16,6 +16,7 @@ function second() {
 console.log(first());
 console.log(second());
 
+
 // functions do not return the same thing. Function first() returns the object and second()
 // returns undefined
 // reason for odd behavior is that semicolons in JS are optional, however, when you omit them, the JS
