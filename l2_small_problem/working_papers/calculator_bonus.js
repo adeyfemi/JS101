@@ -7,6 +7,7 @@ subtract, multiply or divide
 3) perform the calculation and display the result
 */
 
+
 /* steps to build calculator
 a) ask user for the first number
 b) ask user for the second number
