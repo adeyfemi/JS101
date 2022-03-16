@@ -3,7 +3,7 @@
 // Game Play
 /*
 1. User makes a choice
-2. Computer makes a choice
+2. Comuter makes a choice
 3. Winner is displayed
 */
 
