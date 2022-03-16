@@ -8,6 +8,8 @@
   }
 }); // => [ 1, 2, 4, 9, 11, 21, 107 ]
 
+
+
 // sort method iterates over the array and supplies the callback function with two elements each time
 // It arranges the relative positions of the two elements using the following rules:
 
